@@ -19,7 +19,7 @@ def admin_add_company():
         company_name = request.form['company_name']
         owner = request.form['owner']
         conn = get_data_connection()
-        # Correccion 1: Consulta parametrizada
+        # Correccion 1: Insercion parametrizada
         conn.execute("INSERT INTO companies (name, owner) VALUES (?, ?)", (company_name, owner))
         conn.commit()
         conn.close()
@@ -33,7 +33,7 @@ def delete_company():
         return render_template('errors/403.html'), 403
     company = request.form['company']
     conn = get_data_connection()
-    # Correccion 2: Consultas parametrizadas
+    # Correccion 2: Borrados parametrizados
     conn.execute("DELETE FROM companies WHERE id = ?", (company,))
     conn.execute("DELETE FROM comments WHERE company_id = ?", (company,))
     conn.commit()
