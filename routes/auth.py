@@ -1,20 +1,30 @@
 from db import get_users_connection, verify_password
 from flask import request, redirect, render_template, session, flash
 from server import app
+from werkzeug.urls import url_parse
+
+# Correccion 1: Comprobar si la url destino es externa
+def is_safe_url(target):
+    ref_url = url_parse(request.host_url)
+    test_url = url_parse(target)
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'username' in session:
         return redirect('/dashboard')
-    next_url = request.args.get('next', '/dashboard')
+    next_url = request.args.get('next')
+    # Validar que next_url sea seguro, si no, ir al dashboard
+    if not next_url or not is_safe_url(next_url):
+        next_url = '/dashboard'
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         conn = get_users_connection()
-        # Correccion 1: Consulta parametrizada
+        # Correccion 2: Consulta parametrizada
         user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         conn.close()
-        # Correccion 2: Verificacion del hash de forma segura
+        # Correccion 3: Verificacion del hash de forma segura
         if user and verify_password(user['password'], password):
             session['user_id'] = user['id']
             session['username'] = user['username']
