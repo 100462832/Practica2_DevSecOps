@@ -28,10 +28,14 @@ def add_user():
     company_id = request.form.get('company_id') if role == 'owner' else None
 
     conn = get_users_connection()
+    # Correccion: Inserciones parametrizadas
     if company_id:
-        conn.execute("INSERT INTO users (username, password, role, company_id) VALUES ('"+username+"', '"+hash_password(password)+"', "+role+", "+company_id+")")
+        query = "INSERT INTO users (username, password, role, company_id) VALUES (?, ?, ?, ?)"
+        params = (username, hash_password(password), role, company_id)
     else:
-        conn.execute("INSERT INTO users (username, password, role) VALUES ('"+username+"', '"+hash_password(password)+"', "+role+")")
+        query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)"
+        params = (username, hash_password(password), role)
+    conn.execute(query, params)
     conn.commit()
     conn.close()
     flash("User created successfully.", "success")
