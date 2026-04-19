@@ -11,7 +11,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         conn = get_users_connection()
-        user = conn.execute("SELECT * FROM users WHERE username = '"+ username +"' AND password = '"+hash_password(password)+"'").fetchone()
+        # Correccion: Consulta parametrizada
+        query = "SELECT * FROM users WHERE username = ? AND password = ?"
+        params = (username, hash_password(password))
+        user = conn.execute(query, params).fetchone()
         conn.close()
         
         if user:
