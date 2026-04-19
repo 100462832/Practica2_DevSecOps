@@ -7,7 +7,8 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="/companies">Companies</a></li>
-        <li class="breadcrumb-item active">{{ company['name']|safe }}</li>
+        <!--Correccion 1: Escapar HTML-->
+        <li class="breadcrumb-item active">{{ company['name']}}</li>
     </ol>
 </nav>
 {% endblock %}
@@ -15,8 +16,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-start mb-3">
     <div>
-        <h2>{{ company['name']|safe }}</h2>
-        <p class="text-muted">{{ company['description']|safe }}</p>
+        <!--Correccion 2: Escapar HTML-->
+        <h2>{{ company['name']}}</h2>
+        <p class="text-muted">{{ company['description']}}</p>
     </div>
     {% if session['role'] == 'admin' %}
     <div class="btn-group">
@@ -44,7 +46,8 @@
                     {% else %}
                     {{ comment['user'] }}:
                     {% endif %}
-                </strong> {{ comment['comment']|safe }}
+                <!--Correccion 3: Escapar HTML-->
+                </strong> {{ comment['comment']}}
             </li>
         {% else %}
             <li class="list-group-item text-muted">No comments yet.</li>
