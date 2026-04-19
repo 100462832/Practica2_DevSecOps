@@ -1,11 +1,22 @@
 from flask import Flask, render_template
+import os
 from flask_wtf.csrf import CSRFProtect
+from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'
-app.permanent_session_lifetime = 99999999
 # Correccion 1: Implementacion de token CSRF
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(32).hex)
+# Correccion 2: Tiempo de sesion reducido
+app.permanent_session_lifetime = timedelta(minutes=20)
+# Correccion 3: Implementacion de token CSRF
 csrf = CSRFProtect(app)
+
+# Correccion 4: Configuracion de las flags de seguridad de las cookies
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+)
 
 @app.errorhandler(404)
 def not_found(e):
