@@ -1,4 +1,4 @@
-from db import get_users_connection, hash_password
+from db import get_users_connection, verify_password
 from flask import request, redirect, render_template, session, flash
 from server import app
 
@@ -11,13 +11,11 @@ def login():
         username = request.form['username']
         password = request.form['password']
         conn = get_users_connection()
-        # Correccion: Consulta parametrizada
-        query = "SELECT * FROM users WHERE username = ? AND password = ?"
-        params = (username, hash_password(password))
-        user = conn.execute(query, params).fetchone()
+        # Correccion 1: Consulta parametrizada
+        user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         conn.close()
-        
-        if user:
+        # Correccion 2: Verificacion del hash de forma segura
+        if user and verify_password(user['password'], password):
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['role'] = user['role']
