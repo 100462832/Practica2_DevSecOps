@@ -4,16 +4,25 @@
 
 ---
 
-## Installation
+## Installation and how to run
+
+Use a Python environment and install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Run main.py to start the application.
+
+```bash
 python main.py
 ```
 
 Visit: `http://127.0.0.1:5000`
 
 The database is automatically initialized on first run.
+
+To restore the database, delete the files db/data.db and db/users.db then run main.py.
 
 ---
 
