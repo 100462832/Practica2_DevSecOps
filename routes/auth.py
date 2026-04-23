@@ -1,13 +1,13 @@
 from db import get_users_connection, verify_password
 from flask import request, redirect, render_template, session, flash
 from server import app
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse
 
 # Correccion 1: Comprobar si la url destino es externa
 def is_safe_url(target):
-    ref_url = url_parse(request.host_url)
-    test_url = url_parse(target)
-    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+    ref_url = urlparse(request.host_url)
+    dest_url = urlparse(target)
+    return dest_url.scheme in ('http', 'https') and ref_url.netloc == dest_url.netloc
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
