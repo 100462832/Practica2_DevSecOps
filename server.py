@@ -4,7 +4,7 @@ from flask_wtf.csrf import CSRFProtect
 from datetime import timedelta
 
 app = Flask(__name__)
-# Correccion 1: Implementacion de token CSRF
+# Correccion 1: Clave secreta aleatoria
 app.secret_key = secrets.token_hex(32)
 # Correccion 2: Tiempo de sesion reducido
 app.permanent_session_lifetime = timedelta(minutes=20)
